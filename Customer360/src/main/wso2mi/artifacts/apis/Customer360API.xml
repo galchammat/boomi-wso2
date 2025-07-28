@@ -1,0 +1,99 @@
+<api xmlns="http://ws.apache.org/ns/synapse" name="Customer360API" context="/customer360">
+    <resource methods="GET" uri-template="/{customerId}">
+        <inSequence>
+            <variable name="customerId" expression="${params.pathParams.customerId}" type="STRING"/>
+            
+            <!-- Use scatter-gather to call all three systems in parallel -->
+            <scatter-gather parallel-execution="true" target="Body" result-content-type="JSON">
+                <aggregation expression="${payload}"/>
+                
+                <!-- CRM System Call -->
+                <sequence>
+                    <http.get configKey="CRMConnection">
+                        <relativePath>/customers/${vars.customerId}</relativePath>
+                        <headers>[]</headers>
+                        <requestBodyType>JSON</requestBodyType>
+                        <forceScAccepted>false</forceScAccepted>
+                        <disableChunking>false</disableChunking>
+                        <forceHttp10>false</forceHttp10>
+                        <noKeepAlive>false</noKeepAlive>
+                        <forcePostPutNobody>false</forcePostPutNobody>
+                        <forceHttpContentLength>false</forceHttpContentLength>
+                    </http.get>
+                    <payloadFactory media-type="json" template-type="default">
+                        <format>
+                            {
+                            "source": "CRM",
+                            "data": ${payload}
+                            }
+                        </format>
+                    </payloadFactory>
+                </sequence>
+                <!-- Transaction System Call -->
+                <sequence>
+                    <http.get configKey="TransactionConnection">
+                        <relativePath>/transactions?customerId=${vars.customerId}</relativePath>
+                        <headers>[]</headers>
+                        <requestBodyType>JSON</requestBodyType>
+                        <forceScAccepted>false</forceScAccepted>
+                        <disableChunking>false</disableChunking>
+                        <forceHttp10>false</forceHttp10>
+                        <noKeepAlive>false</noKeepAlive>
+                        <forcePostPutNobody>false</forcePostPutNobody>
+                        <forceHttpContentLength>false</forceHttpContentLength>
+                    </http.get>
+                    <payloadFactory media-type="json" template-type="default">
+                        <format>
+                            {
+                            "source": "Transactions",
+                            "data": ${payload}
+                            }
+                        </format>
+                    </payloadFactory>
+                </sequence>
+                <!-- Support System Call -->
+                <sequence>
+                    <http.get configKey="SupportConnection">
+                        <relativePath>/tickets?customerId=${vars.customerId}</relativePath>
+                        <headers>[]</headers>
+                        <requestBodyType>JSON</requestBodyType>
+                        <forceScAccepted>false</forceScAccepted>
+                        <disableChunking>false</disableChunking>
+                        <forceHttp10>false</forceHttp10>
+                        <noKeepAlive>false</noKeepAlive>
+                        <forcePostPutNobody>false</forcePostPutNobody>
+                        <forceHttpContentLength>false</forceHttpContentLength>
+                    </http.get>
+                    <payloadFactory media-type="json" template-type="default">
+                        <format>
+                            {
+                            "source": "Support",
+                            "data": ${payload}
+                            }
+                        </format>
+                    </payloadFactory>
+                </sequence>
+            </scatter-gather>
+            
+            <!-- Transform aggregated data into unified Customer360 response -->
+            <sequence key="Test"/>
+            
+            <respond/>
+        </inSequence>
+        <faultSequence>
+            <log category="ERROR">
+                <message>Error in Customer360 API: ${props.synapse.ERROR_MESSAGE}</message>
+            </log>
+            <payloadFactory media-type="json">
+                <format>
+                    {
+                    "error": "Failed to retrieve customer data",
+                    "customerId": "${vars.customerId}",
+                    "message": "${props.synapse.ERROR_MESSAGE}"
+                    }
+                </format>
+            </payloadFactory>
+            <respond/>
+        </faultSequence>
+    </resource>
+</api>

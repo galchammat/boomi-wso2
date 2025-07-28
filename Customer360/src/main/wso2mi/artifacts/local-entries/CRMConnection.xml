@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="CRMConnection" xmlns="http://ws.apache.org/ns/synapse">
+  <http.init>
+    <connectionType>http</connectionType>
+    <baseUrl>https://eebd3300-ca1f-4584-a0fb-53b3c5fb57cb.mock.pstmn.io</baseUrl>
+    <authType>None</authType>
+    <timeoutAction>Never</timeoutAction>
+    <retryCount>0</retryCount>
+    <retryDelay>0</retryDelay>
+    <suspendInitialDuration>-1</suspendInitialDuration>
+    <suspendProgressionFactor>1</suspendProgressionFactor>
+    <name>CRMConnection</name>
+  </http.init>
+</localEntry>

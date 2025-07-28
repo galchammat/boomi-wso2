@@ -1,0 +1,19 @@
+<sequence name="FormatCustomer360Response" xmlns="http://ws.apache.org/ns/synapse">
+    <variable name="crmInfo" expression="${payload[?(@.source=='CRM')].data[0]}" type="JSON"/>
+    <variable name="transactionInfo" expression="${payload[?(@.source=='Transactions')].data[0]}" type="JSON"/>
+    <variable name="supportInfo" expression="${payload[?(@.source=='Support')].data[0]}" type="JSON"/>
+    
+    <payloadFactory media-type="json">
+        <format>
+            {
+                "customerId": "${vars.customerId}",
+                "timestamp": "${formatDateTime(now(), 'yyyy-MM-dd HH:mm:ss')}",
+                "customer360": {
+                    "profile": ${vars.crmInfo},
+                    "purchaseHistory": ${vars.transactionInfo},
+                    "supportActivity": ${vars.supportInfo}
+                }
+            }
+        </format>
+    </payloadFactory>
+</sequence>

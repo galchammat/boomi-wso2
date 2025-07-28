@@ -1,0 +1,19 @@
+openapi: 3.0.1
+info:
+  title: Customer360API
+  description: API Definition of Customer360API
+  version: 1.0.0
+servers:
+- url: http://localhost:8290/customer360
+paths:
+  /{customerId}:
+    get:
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Default response
