@@ -13,6 +13,7 @@
                         <relativePath>/customers/${vars.customerId}</relativePath>
                         <headers>[]</headers>
                         <requestBodyType>JSON</requestBodyType>
+                        <responseBodyType>JSON</responseBodyType>
                         <forceScAccepted>false</forceScAccepted>
                         <disableChunking>false</disableChunking>
                         <forceHttp10>false</forceHttp10>
@@ -35,6 +36,7 @@
                         <relativePath>/transactions?customerId=${vars.customerId}</relativePath>
                         <headers>[]</headers>
                         <requestBodyType>JSON</requestBodyType>
+                        <responseBodyType>JSON</responseBodyType>
                         <forceScAccepted>false</forceScAccepted>
                         <disableChunking>false</disableChunking>
                         <forceHttp10>false</forceHttp10>
@@ -57,6 +59,7 @@
                         <relativePath>/tickets?customerId=${vars.customerId}</relativePath>
                         <headers>[]</headers>
                         <requestBodyType>JSON</requestBodyType>
+                        <responseBodyType>JSON</responseBodyType>
                         <forceScAccepted>false</forceScAccepted>
                         <disableChunking>false</disableChunking>
                         <forceHttp10>false</forceHttp10>
@@ -76,7 +79,7 @@
             </scatter-gather>
             
             <!-- Transform aggregated data into unified Customer360 response -->
-            <sequence key="Test"/>
+            <sequence key="FormatCustomer360Response"/>
             
             <respond/>
         </inSequence>
@@ -84,15 +87,7 @@
             <log category="ERROR">
                 <message>Error in Customer360 API: ${props.synapse.ERROR_MESSAGE}</message>
             </log>
-            <payloadFactory media-type="json">
-                <format>
-                    {
-                    "error": "Failed to retrieve customer data",
-                    "customerId": "${vars.customerId}",
-                    "message": "${props.synapse.ERROR_MESSAGE}"
-                    }
-                </format>
-            </payloadFactory>
+            <sequence key="HandleErrorResponse"/>
             <respond/>
         </faultSequence>
     </resource>

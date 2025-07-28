@@ -1,0 +1,15 @@
+<sequence name="HandleErrorResponse" xmlns="http://ws.apache.org/ns/synapse">
+    <payloadFactory media-type="json">
+        <format>
+            {
+                "error": {
+                    "code": "${props.synapse.ERROR_CODE}",
+                    "message": "We're sorry, but we couldn't retrieve the customer information at this time. Please try again later.",
+                    "technicalDetails": "${props.synapse.ERROR_MESSAGE}",
+                    "timestamp": "${formatDateTime(now(), 'yyyy-MM-dd HH:mm:ss')}",
+                    "customerId": "${vars.customerId}"
+                }
+            }
+        </format>
+    </payloadFactory>
+</sequence>
