@@ -1,0 +1,294 @@
+{
+	"info": {
+		"_postman_id": "5ee4b630-bd4e-470d-930c-690f4b5d677d",
+		"name": "Mock Data for Boomi & WSO2 Demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3533915",
+		"_collection_link": "https://ghazi2.postman.co/workspace/Pizza~32de9abf-cc7e-431f-8ce2-62b835950bb7/collection/3533915-5ee4b630-bd4e-470d-930c-690f4b5d677d?action=share&source=collection_link&creator=3533915"
+	},
+	"item": [
+		{
+			"name": "crmData",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "/customers/:customerId",
+					"path": [
+						"customers",
+						":customerId"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "customerId",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "crmDataBob",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "/customers/:customerId",
+							"path": [
+								"customers",
+								":customerId"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": "{\r\n  \"customer_id\": \"2\",\r\n  \"name\": {\r\n    \"first\": \"Bob\",\r\n    \"last\": \"Smith\",\r\n    \"full\": \"Bob Smith\"\r\n  },\r\n  \"email\": \"bob@example.com\",\r\n  \"phone\": \"+968-555-5678\",\r\n  \"address\": {\r\n    \"street\": \"123 Al-Khuwair St\",\r\n    \"city\": \"Muscat\",\r\n    \"state\": \"Muscat Governorate\",\r\n    \"country\": \"Oman\",\r\n    \"postal_code\": \"113\"\r\n  },\r\n  \"location\": {\r\n    \"latitude\": 23.5859,\r\n    \"longitude\": 58.4059,\r\n    \"timezone\": \"Asia/Muscat\"\r\n  },\r\n  \"createdDate\": \"2020-04-15T10:35:00Z\",\r\n  \"last_active\": \"2025-07-22T14:18:00Z\",\r\n  \"status\": \"active\",\r\n  \"tier\": \"gold\",\r\n  \"preferences\": {\r\n    \"language\": \"English\",\r\n    \"communication_channels\": [\"email\", \"sms\"],\r\n    \"marketing_opt_in\": true\r\n  },\r\n  \"lifecycle_stage\": \"customer\",\r\n  \"tags\": [\"newsletter_subscriber\", \"early_adopter\"],\r\n  \"lead_source\": \"website_form\",\r\n  \"engagement\": {\r\n    \"total_orders\": 14,\r\n    \"last_order_date\": \"2025-07-15\",\r\n    \"average_order_value\": 87.25,\r\n    \"lifetime_value\": 1221.50\r\n  },\r\n  \"notes\": \"Loyal customer since 2020. Prefers evening calls. Interested in premium accessories.\"\r\n}\r\n"
+				},
+				{
+					"name": "crmDataAlice",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "/customers/:customerId",
+							"path": [
+								"customers",
+								":customerId"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": "{\r\n  \"customer_id\": \"c1234a1e-8e2b-42dc-a6c7-91f0a1e55de7\",\r\n  \"name\": {\r\n    \"first\": \"Alice\",\r\n    \"last\": \"Johnson\",\r\n    \"full\": \"Alice Johnson\"\r\n  },\r\n  \"email\": \"alice.johnson@example.com\",\r\n  \"phone\": \"+968-555-1122\",\r\n  \"address\": {\r\n    \"street\": \"45 Al-Ghubrah St\",\r\n    \"city\": \"Muscat\",\r\n    \"state\": \"Muscat Governorate\",\r\n    \"country\": \"Oman\",\r\n    \"postal_code\": \"115\"\r\n  },\r\n  \"createdDate\": \"2021-09-10T09:20:00Z\",\r\n  \"last_active\": \"2025-07-20T17:50:00Z\",\r\n  \"status\": \"active\",\r\n  \"tier\": \"silver\",\r\n  \"preferences\": {\r\n    \"language\": \"English\",\r\n    \"communication_channels\": [\"email\"],\r\n    \"marketing_opt_in\": false\r\n  },\r\n  \"lifecycle_stage\": \"lead\",\r\n  \"tags\": [\"occasional_buyer\"],\r\n  \"lead_source\": \"instagram_ad\",\r\n  \"engagement\": {\r\n    \"total_orders\": 4,\r\n    \"last_order_date\": \"2025-06-10\",\r\n    \"average_order_value\": 42.00,\r\n    \"lifetime_value\": 168.00\r\n  },\r\n  \"notes\": \"Enjoys seasonal discounts. Not interested in accessories.\"\r\n}\r\n"
+				},
+				{
+					"name": "crmDataCharlie",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "/customers/:customerId",
+							"path": [
+								"customers",
+								":customerId"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": "{\r\n  \"customer_id\": \"c5678d4b-9b88-4e71-a12a-b0c2e8b6df44\",\r\n  \"name\": {\r\n    \"first\": \"Charlie\",\r\n    \"last\": \"Brown\",\r\n    \"full\": \"Charlie Brown\"\r\n  },\r\n  \"email\": \"charlie.brown@example.com\",\r\n  \"phone\": \"+968-555-3344\",\r\n  \"address\": {\r\n    \"street\": \"78 Al-Azaiba Rd\",\r\n    \"city\": \"Muscat\",\r\n    \"state\": \"Muscat Governorate\",\r\n    \"country\": \"Oman\",\r\n    \"postal_code\": \"114\"\r\n  },\r\n  \"createdDate\": \"2025-06-01T12:00:00Z\",\r\n  \"last_active\": \"2025-06-10T14:00:00Z\",\r\n  \"status\": \"inactive\",\r\n  \"tier\": \"bronze\",\r\n  \"preferences\": {\r\n    \"language\": \"Arabic\",\r\n    \"communication_channels\": [\"sms\"],\r\n    \"marketing_opt_in\": false\r\n  },\r\n  \"lifecycle_stage\": \"prospect\",\r\n  \"tags\": [],\r\n  \"lead_source\": \"referral\",\r\n  \"engagement\": {\r\n    \"total_orders\": 1,\r\n    \"last_order_date\": \"2025-06-05\",\r\n    \"average_order_value\": 23.99,\r\n    \"lifetime_value\": 23.99\r\n  },\r\n  \"support_reference\": {\r\n    \"support_customer_id\": \"support-3344\",\r\n    \"api_url\": \"https://support.example.com/customers/support-3344\"\r\n  },\r\n  \"notes\": \"Signed up recently, no engagement after first order.\"\r\n}\r\n"
+				}
+			]
+		},
+		{
+			"name": "supportData",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "/tickets?customerId",
+					"path": [
+						"tickets"
+					],
+					"query": [
+						{
+							"key": "customerId",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "supportDataBob",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "/tickets?customerId=2",
+							"path": [
+								"tickets"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": "2"
+								},
+								{
+									"key": null,
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": "[\n    {\n        \"ticketId\": \"SUP-8832\",\n        \"subject\": \"Delayed delivery\",\n        \"status\": \"open\",\n        \"createdOn\": \"2025-07-20\"\n    },\n    {\n        \"ticketId\": \"SUP-8791\",\n        \"subject\": \"Refund request\",\n        \"status\": \"closed\",\n        \"createdOn\": \"2025-06-30\"\n    }\n]"
+				},
+				{
+					"name": "supportDataAlice",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "/tickets?customerId=1",
+							"path": [
+								"tickets"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": "[]"
+				},
+				{
+					"name": "supportDataCharlie",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "/tickets?customerId=3",
+							"path": [
+								"tickets"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": "[]"
+				}
+			]
+		}
+	]
+}
