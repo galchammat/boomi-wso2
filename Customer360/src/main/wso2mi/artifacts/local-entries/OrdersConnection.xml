@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="OrdersConnection" xmlns="http://ws.apache.org/ns/synapse">
+  <ai.init>
+    <connectionType>POSTGRES_MEMORY</connectionType>
+    <host>localhost</host>
+    <port>5432</port>
+    <database>orders_db</database>
+    <user>demo</user>
+    <password>demo</password>
+    <table>customer_orders</table>
+    <name>OrdersConnection</name>
+  </ai.init>
+</localEntry>
