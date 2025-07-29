@@ -21,6 +21,19 @@ algorithm = "AES"
 content_type = "text/json"
 class = "org.wso2.micro.integrator.core.json.JsonStreamBuilder"
 
+[[datasource]]
+id = "OrdersDB"
+url= "jdbc:postgresql://localhost:5432/orders_db"
+username="demo"
+password="demo"
+driver="org.postgresql.Driver"
+pool_options.maxActive=50
+pool_options.maxWait = 60000
+pool_options.testOnBorrow = true
+
+[realm_manager]
+data_source = "OrdersDB"
+
 ## Following are set of example configs. Please refer docs for complete set of configurations.
 
 # [transport.http]

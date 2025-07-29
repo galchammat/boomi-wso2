@@ -12,8 +12,6 @@
                     <http.get configKey="CRMConnection">
                         <relativePath>/customers/${vars.customerId}</relativePath>
                         <headers>[]</headers>
-                        <requestBodyType>JSON</requestBodyType>
-                        <responseBodyType>JSON</responseBodyType>
                         <forceScAccepted>false</forceScAccepted>
                         <disableChunking>false</disableChunking>
                         <forceHttp10>false</forceHttp10>
@@ -21,7 +19,7 @@
                         <forcePostPutNobody>false</forcePostPutNobody>
                         <forceHttpContentLength>false</forceHttpContentLength>
                     </http.get>
-                    <payloadFactory media-type="json" template-type="default">
+                    <payloadFactory media-type="json">
                         <format>
                             {
                             "source": "CRM",
@@ -30,36 +28,12 @@
                         </format>
                     </payloadFactory>
                 </sequence>
-                <!-- Transaction System Call -->
-                <sequence>
-                    <http.get configKey="TransactionConnection">
-                        <relativePath>/transactions?customerId=${vars.customerId}</relativePath>
-                        <headers>[]</headers>
-                        <requestBodyType>JSON</requestBodyType>
-                        <responseBodyType>JSON</responseBodyType>
-                        <forceScAccepted>false</forceScAccepted>
-                        <disableChunking>false</disableChunking>
-                        <forceHttp10>false</forceHttp10>
-                        <noKeepAlive>false</noKeepAlive>
-                        <forcePostPutNobody>false</forcePostPutNobody>
-                        <forceHttpContentLength>false</forceHttpContentLength>
-                    </http.get>
-                    <payloadFactory media-type="json" template-type="default">
-                        <format>
-                            {
-                            "source": "Transactions",
-                            "data": ${payload}
-                            }
-                        </format>
-                    </payloadFactory>
-                </sequence>
+                
                 <!-- Support System Call -->
                 <sequence>
                     <http.get configKey="SupportConnection">
                         <relativePath>/tickets?customerId=${vars.customerId}</relativePath>
                         <headers>[]</headers>
-                        <requestBodyType>JSON</requestBodyType>
-                        <responseBodyType>JSON</responseBodyType>
                         <forceScAccepted>false</forceScAccepted>
                         <disableChunking>false</disableChunking>
                         <forceHttp10>false</forceHttp10>
@@ -67,7 +41,7 @@
                         <forcePostPutNobody>false</forcePostPutNobody>
                         <forceHttpContentLength>false</forceHttpContentLength>
                     </http.get>
-                    <payloadFactory media-type="json" template-type="default">
+                    <payloadFactory media-type="json">
                         <format>
                             {
                             "source": "Support",
@@ -76,11 +50,59 @@
                         </format>
                     </payloadFactory>
                 </sequence>
+                
+                <!-- Orders System Call using direct database connection -->
+                <sequence>
+                    <!-- Initialize variables with default values -->
+                    <variable name="orderData" type="JSON" value="[]"/>
+                    <dblookup>
+                        <connection>
+                            <pool>
+                                <driver>org.postgresql.Driver</driver>
+                                <url>jdbc:postgresql://localhost:5432/orders_db</url>
+                                <user>demo</user>
+                                <password>demo</password>
+                                <property name="validationquery" value=""/>
+                            </pool>
+                        </connection>
+                        <statement>
+                            <sql><![CDATA[SELECT customer_id, name, order_id, product, amount, order_date FROM customer_orders WHERE customer_id = ?;]]></sql>
+                            <parameter expression="${vars.customerId}" type="INTEGER"/>
+                            <result column="customer_id" name="customer_id"/>
+                            <result column="name" name="name"/>
+                            <result column="order_id" name="order_id"/>
+                            <result column="product" name="product"/>
+                            <result column="amount" name="amount"/>
+                            <result column="order_date" name="order_date"/>
+                        </statement>
+                    </dblookup>
+                    <payloadFactory media-type="json" template-type="default">
+                        <format>
+                            {
+                                "source": "Orders",
+                                "order": {
+                                    "customer_id": "$1",
+                                    "name": "$2",
+                                    "order_id": "$3",
+                                    "product": "$4",
+                                    "amount": "$5",
+                                    "order_date": "$6"
+                                }
+                            }
+                        </format>
+                        <args>
+                            <arg expression="get-property('customer_id')"/>
+                            <arg expression="get-property('name')"/>
+                            <arg expression="get-property('order_id')"/>
+                            <arg expression="get-property('product')"/>
+                            <arg expression="get-property('amount')"/>
+                            <arg expression="get-property('order_date')"/>
+                        </args>
+                    </payloadFactory>
+                </sequence>
             </scatter-gather>
             
-            <!-- Transform aggregated data into unified Customer360 response -->
             <sequence key="FormatCustomer360Response"/>
-            
             <respond/>
         </inSequence>
         <faultSequence>

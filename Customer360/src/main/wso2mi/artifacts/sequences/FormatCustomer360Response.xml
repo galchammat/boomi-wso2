@@ -1,6 +1,6 @@
 <sequence name="FormatCustomer360Response" xmlns="http://ws.apache.org/ns/synapse">
     <variable name="crmInfo" type="JSON" expression="${payload[?(@.source=='CRM')].data}"/>
-    <variable name="transactionInfo" type="JSON" expression="${payload[?(@.source=='Transactions')].data}"/>
+    <variable name="orderInfo" type="JSON" expression="${payload[?(@.source=='Orders')]}" />
     <variable name="supportInfo" type="JSON" expression="${payload[?(@.source=='Support')].data}"/>
     
     <payloadFactory media-type="json">
@@ -10,7 +10,7 @@
             "timestamp": "${formatDateTime(now(), 'yyyy-MM-dd HH:mm:ss')}",
             "customer360": {
             "profile": ${vars.crmInfo},
-            "purchaseHistory": ${vars.transactionInfo},
+            "purchaseHistory": ${vars.orderInfo},
             "supportActivity": ${vars.supportInfo}
             }
             }
