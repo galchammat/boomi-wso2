@@ -406,18 +406,6 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.integration.connector</groupId>
-            <artifactId>mi-connector-ai</artifactId>
-            <version>0.1.7</version>
-            <type>zip</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.integration.connector</groupId>
             <artifactId>mi-connector-http</artifactId>
             <version>0.1.11</version>
             <type>zip</type>
