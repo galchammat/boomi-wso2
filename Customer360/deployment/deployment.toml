@@ -34,6 +34,13 @@ pool_options.testOnBorrow = true
 [realm_manager]
 data_source = "OrdersDB"
 
+[[service_catalog]]
+apim_host = "https://localhost:9443"
+enable = true
+username = "admin"
+password = "admin"
+
+
 ## Following are set of example configs. Please refer docs for complete set of configurations.
 
 # [transport.http]
