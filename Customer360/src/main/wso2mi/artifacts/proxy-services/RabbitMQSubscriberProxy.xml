@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="RabbitMQSubscriberProxy" transports="rabbitmq" startOnLoad="true">
+  <description>RabbitMQ Subscriber Proxy with manual ack and requeue on failure</description>
+  <target>
+    <inSequence>
+      <!-- Tell WSO2 to handle JSON -->
+      <property name="messageType" value="application/json" scope="axis2" type="STRING"/>
+      
+      <log level="custom">
+        <property name="Message Received" expression="json-eval($)"/>
+      </log>
+
+      <throwError>
+        <message>FORCED ERROR</message>
+      </throwError>
+
+      <!-- Blocking call to downstream HTTP endpoint -->
+      <call blocking="true">
+        <endpoint>
+          <http uri-template="http://localhost:8290/customer360/orders" method="post"/>
+        </endpoint>
+      </call>
+      
+      <log level="custom">
+        <property name="Status" value="Message processed successfully"/>
+      </log>
+      
+      <!-- Explicitly ack on success -->
+      <property name="rabbitmq.ack" value="true" scope="default"/>
+    </inSequence>
+
+    <faultSequence>
+      <log level="custom">
+        <property name="Status" value="Could not process the message, rolling back for requeue"/>
+      </log>
+      
+      <!-- Tell WSO2 to rollback and requeue the message -->
+      <property name="SET_REQUEUE_ON_ROLLBACK" value="true" scope="axis2"/>
+    </faultSequence>
+  </target>
+
+  <!-- RabbitMQ parameters -->
+  <parameter name="rabbitmq.queue.routing.key">topic1</parameter>
+  <parameter name="rabbitmq.exchange.name">amq.topic</parameter>
+  <parameter name="rabbitmq.queue.name">ordersQueue</parameter>
+  <parameter name="rabbitmq.queue.auto.ack">false</parameter>
+  <parameter name="rabbitmq.channel.consumer.qos">1</parameter>
+  <parameter name="rabbitmq.connection.factory">AMQPConnectionFactory</parameter>
+  <parameter name="rabbitmq.message.content.type">application/json</parameter>
+</proxy>

@@ -79,15 +79,15 @@
                     <payloadFactory media-type="json" template-type="default">
                         <format>
                             {
-                                "source": "Orders",
-                                "order": {
-                                    "customer_id": "$1",
-                                    "name": "$2",
-                                    "order_id": "$3",
-                                    "product": "$4",
-                                    "amount": "$5",
-                                    "order_date": "$6"
-                                }
+                            "source": "Orders",
+                            "order": {
+                            "customer_id": "$1",
+                            "name": "$2",
+                            "order_id": "$3",
+                            "product": "$4",
+                            "amount": "$5",
+                            "order_date": "$6"
+                            }
                             }
                         </format>
                         <args>
@@ -101,7 +101,6 @@
                     </payloadFactory>
                 </sequence>
             </scatter-gather>
-            
             <sequence key="FormatCustomer360Response"/>
             <respond/>
         </inSequence>
@@ -113,4 +112,52 @@
             <respond/>
         </faultSequence>
     </resource>
+    <resource methods="POST" uri-template="/orders">
+        <inSequence>
+            <!-- Extract JSON properties -->
+            <property name="customerId" expression="json-eval($.customer_id)" scope="default" type="STRING"/>
+            <property name="product" expression="json-eval($.product)" scope="default" type="STRING"/>
+            <property name="amount" expression="json-eval($.amount)" scope="default" type="STRING"/><!-- Insert into DB -->
+            <dbreport>
+                <connection>
+                    <pool>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>jdbc:postgresql://localhost:5432/orders_db</url>
+                        <user>demo</user>
+                        <password>demo</password>
+                        <property name="validationquery" value="SELECT 1"/>
+                    </pool>
+                </connection>
+                <statement>
+                    <sql>
+                        <![CDATA[
+                        INSERT INTO orders 
+                        (customer_id, product, amount) 
+                        VALUES (?, ?, ?)
+                        ]]>
+                    </sql>
+                    <parameter expression="get-property('customerId')" type="INTEGER"/>
+                    <parameter expression="get-property('product')" type="VARCHAR"/>
+                    <parameter expression="get-property('amount')" type="DECIMAL"/>
+                </statement>
+            </dbreport>
+            <!-- Build JSON response -->
+            <payloadFactory media-type="json">
+                <format>{"message":"Order inserted successfully"}</format>
+                <args/>
+            </payloadFactory>
+
+            <respond/>
+        </inSequence>
+        <faultSequence>
+            <log level="full">
+                <property name="Error" expression="get-property('ERROR_MESSAGE')"/>
+            </log>
+            <payloadFactory media-type="json">
+                <format>{"message":"Error inserting order"}</format>
+                <args/>
+            </payloadFactory><respond/>
+        </faultSequence>
+    </resource>
+
 </api>
