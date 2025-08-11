@@ -1,0 +1,54 @@
+{
+  "users": [
+    {
+      "name": "guest",
+      "password_hash": "hgP4jNYOarQW9VYP+xvZzyfn8mBYxCMq0zZ2o8RO4GCt7yDr",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": "administrator"
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "guest",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "amq.topic",
+      "vhost": "/",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "ordersQueue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "amq.topic",
+      "vhost": "/",
+      "destination": "ordersQueue",
+      "destination_type": "queue",
+      "routing_key": "topic1",
+      "arguments": {}
+    }
+  ]
+}
