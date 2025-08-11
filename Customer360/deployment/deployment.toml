@@ -78,23 +78,23 @@ password = "admin"
 # [transport.jndi.topic]
 # jndiNameOfTopic = "physicalNameOfTopic"
 
-# [transport.rabbitmq]
-# sender_enable = true
-# listener_enable = true
+[transport.rabbitmq]
+sender_enable = true
+listener_enable = true
 
-# [[transport.rabbitmq.sender]]
-# name = "AMQPConnectionFactory"
-# parameter.hostname = "localhost"
-# parameter.port = 5672
-# parameter.username = "guest"
-# parameter.password = "guest"
+[[transport.rabbitmq.sender]]
+name = "AMQPConnectionFactory"
+parameter.hostname = "localhost"
+parameter.port = 5672
+parameter.username = "guest"
+parameter.password = "guest"
 
-# [[transport.rabbitmq.listener]]
-# name = "AMQPConnectionFactory"
-# parameter.hostname = "localhost"
-# parameter.port = 5672
-# parameter.username = "guest"
-# parameter.password = "guest"
+[[transport.rabbitmq.listener]]
+name = "AMQPConnectionFactory"
+parameter.hostname = "localhost"
+parameter.port = 5672
+parameter.username = "guest"
+parameter.password = "guest"
 
 # [[transport.phase_order]]
 # Entire phase_order list can be found under 'Axis2 Phases' in <MI_HOME>/repository/resources/conf/deployment-full.toml.
