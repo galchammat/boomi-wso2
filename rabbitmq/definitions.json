@@ -1,81 +1,73 @@
 {
-  "users": [
+  "rabbit_version": "3.13.0",
+  "queues": [
     {
-      "name": "guest",
-      "password_hash": "hgP4jNYOarQW9VYP+xvZzyfn8mBYxCMq0zZ2o8RO4GCt7yDr",
-      "hashing_algorithm": "rabbit_password_hashing_sha256",
-      "tags": "administrator"
-    }
-  ],
-  "vhosts": [
-    {
-      "name": "/"
-    }
-  ],
-  "permissions": [
-    {
-      "user": "guest",
+      "name": "orders",
       "vhost": "/",
-      "configure": ".*",
-      "write": ".*",
-      "read": ".*"
+      "durable": true,
+      "arguments": {
+        "x-dead-letter-exchange": "orders.dlx",
+        "x-dead-letter-routing-key": "orders-retry"
+      }
+    },
+    {
+      "name": "orders-retry",
+      "vhost": "/",
+      "durable": true,
+      "arguments": {
+        "x-dead-letter-exchange": "",
+        "x-dead-letter-routing-key": "orders",
+        "x-message-ttl": 10000
+      }
+    },
+    {
+      "name": "orders-dlq",
+      "vhost": "/",
+      "durable": true
     }
   ],
   "exchanges": [
     {
-      "name": "amq.topic",
-      "vhost": "/",
-      "type": "topic",
-      "durable": true,
-      "auto_delete": false,
-      "internal": false,
-      "arguments": {}
-    },
-    {
-      "name": "orders_DLX",
+      "name": "",
       "vhost": "/",
       "type": "direct",
-      "durable": true,
-      "auto_delete": false,
-      "internal": false,
-      "arguments": {}
-    }
-  ],
-  "queues": [
-    {
-      "name": "ordersQueue",
-      "vhost": "/",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {
-        "x-dead-letter-exchange": "orders_DLX",
-        "x-dead-letter-routing-key": "orders.dlq"
-      }
+      "durable": true
     },
     {
-      "name": "orders_DLQ",
+      "name": "orders.dlx",
       "vhost": "/",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {}
+      "type": "direct",
+      "durable": true
     }
   ],
   "bindings": [
     {
-      "source": "amq.topic",
+      "source": "",
       "vhost": "/",
-      "destination": "ordersQueue",
+      "destination": "orders",
       "destination_type": "queue",
-      "routing_key": "topic1",
-      "arguments": {}
+      "routing_key": "orders"
     },
     {
-      "source": "orders_DLX",
+      "source": "",
       "vhost": "/",
-      "destination": "orders_DLQ",
+      "destination": "orders-retry",
       "destination_type": "queue",
-      "routing_key": "orders.dlq",
-      "arguments": {}
+      "routing_key": "orders-retry"
+    },
+    {
+      "source": "orders.dlx",
+      "vhost": "/",
+      "destination": "orders-retry",
+      "destination_type": "queue",
+      "routing_key": "orders-retry"
+    },
+    {
+      "source": "orders.dlx",
+      "vhost": "/",
+      "destination": "orders-dlq",
+      "destination_type": "queue",
+      "routing_key": "orders-dlq"
     }
   ]
 }
