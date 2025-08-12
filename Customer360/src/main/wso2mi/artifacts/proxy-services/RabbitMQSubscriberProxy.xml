@@ -1,50 +1,55 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <proxy xmlns="http://ws.apache.org/ns/synapse" name="RabbitMQSubscriberProxy" transports="rabbitmq" startOnLoad="true">
-  <description>RabbitMQ Subscriber Proxy with manual ack and requeue on failure</description>
+  <description>RabbitMQ Subscriber Proxy with retries and DLQ</description>
+
   <target>
     <inSequence>
-      <!-- Tell WSO2 to handle JSON -->
+      <!-- Set JSON handling -->
       <property name="messageType" value="application/json" scope="axis2" type="STRING"/>
       
       <log level="custom">
         <property name="Message Received" expression="json-eval($)"/>
       </log>
 
-      <throwError>
-        <message>FORCED ERROR</message>
-      </throwError>
-
-      <!-- Blocking call to downstream HTTP endpoint -->
       <call blocking="true">
         <endpoint>
           <http uri-template="http://localhost:8290/customer360/orders" method="post"/>
         </endpoint>
       </call>
-      
-      <log level="custom">
-        <property name="Status" value="Message processed successfully"/>
-      </log>
-      
-      <!-- Explicitly ack on success -->
-      <property name="rabbitmq.ack" value="true" scope="default"/>
+
+      <!-- Check if response JSON has error -->
+      <property name="backendMessage" expression="json-eval($.message)" scope="default" type="STRING"/>
+      <filter xpath="get-property('backendMessage') = 'Error inserting order'">
+        <then>
+          <log level="custom">
+            <property name="BackendError" expression="json-eval($.message)"/>
+            <property name="Action" value="Throwing error to trigger retry"/>
+          </log>
+          <throwError>
+            <message>Backend returned error: {json-eval($.message)}</message>
+          </throwError>
+        </then>
+      </filter>
     </inSequence>
 
     <faultSequence>
       <log level="custom">
-        <property name="Status" value="Could not process the message, rolling back for requeue"/>
+        <property name="Status" value="Message failed, rolling back"/>
       </log>
-      
-      <!-- Tell WSO2 to rollback and requeue the message -->
-      <property name="SET_REQUEUE_ON_ROLLBACK" value="true" scope="axis2"/>
+      <property name="SET_ROLLBACK_ONLY" value="true" scope="axis2"/>
     </faultSequence>
   </target>
 
-  <!-- RabbitMQ parameters -->
-  <parameter name="rabbitmq.queue.routing.key">topic1</parameter>
-  <parameter name="rabbitmq.exchange.name">amq.topic</parameter>
-  <parameter name="rabbitmq.queue.name">ordersQueue</parameter>
+  <!-- RabbitMQ Parameters -->
+  <parameter name="rabbitmq.queue.name">orders</parameter>
+  <parameter name="rabbitmq.queue.routing.key">orders</parameter>
+  <parameter name="rabbitmq.exchange.name"></parameter>
   <parameter name="rabbitmq.queue.auto.ack">false</parameter>
   <parameter name="rabbitmq.channel.consumer.qos">1</parameter>
   <parameter name="rabbitmq.connection.factory">AMQPConnectionFactory</parameter>
   <parameter name="rabbitmq.message.content.type">application/json</parameter>
+
+  <!-- Retry/DLQ Parameters -->
+  <parameter name="rabbitmq.message.max.dead.lettered.count">5</parameter>
+  <parameter name="rabbitmq.message.error.exchange.name">orders.dlx</parameter>
+  <parameter name="rabbitmq.message.error.queue.routing.key">orders-dlq</parameter>
 </proxy>

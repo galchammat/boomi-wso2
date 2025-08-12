@@ -3,13 +3,18 @@
   <description/>
   <target>
       <inSequence>
-          <property name="OUT_ONLY" value="true"/>
-          <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
-          <send>
-              <endpoint>
-                  <address uri="rabbitmq:/topic1?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.server.user.name=guest&amp;rabbitmq.server.password=guest&amp;rabbitmq.exchange.name=amq.topic"/>
-              </endpoint>
-          </send>
-      </inSequence>
+        <property name="OUT_ONLY" value="true"/>
+        <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+        <property name="rabbitmq.queue.routing.key" value="orders" scope="default"/>
+        <property name="rabbitmq.message.persistent" value="true" scope="default"/>
+        <property name="ContentType" value="application/json" scope="axis2"/>
+        <log level="full"/>
+        <send>
+            <endpoint>
+                <address uri="rabbitmq:/orders?rabbitmq.server.host.name=localhost&amp;rabbitmq.server.port=5672&amp;rabbitmq.server.user.name=guest&amp;rabbitmq.server.password=guest&amp;rabbitmq.exchange.name=" />
+            </endpoint>
+        </send>
+    </inSequence>
+
   </target>
 </proxy>
