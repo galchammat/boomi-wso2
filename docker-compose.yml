@@ -1,7 +1,7 @@
 services:
   postgres:
-    image: postgres:15
-    container_name: postgres
+    image: postgres:17.6
+    container_name: postgres-wso2-demo
     environment:
       POSTGRES_USER: demo
       POSTGRES_PASSWORD: demo
